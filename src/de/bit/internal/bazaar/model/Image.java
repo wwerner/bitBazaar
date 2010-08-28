@@ -45,12 +45,7 @@ public class Image implements Serializable {
 
 	@Override
 	public int hashCode() {
-		// @formatter:off
-		HashCodeBuilder hcb = new HashCodeBuilder()
-			.append(id)
-			.append(url)
-			.append(caption);
-		// @formatter:on
+		HashCodeBuilder hcb = new HashCodeBuilder().append(id);
 		return hcb.toHashCode();
 	}
 
@@ -63,13 +58,7 @@ public class Image implements Serializable {
 			return true;
 		}
 		final Image otherItem = (Image) obj;
-		// @formatter:off
-		return new EqualsBuilder()
-			.append(id, otherItem.id)
-			.append(url, otherItem.url)
-			.append(caption, otherItem.caption)
-			.isEquals();
-		// @formatter:on
+		return new EqualsBuilder().append(id, otherItem.id).isEquals();
 	}
 
 }

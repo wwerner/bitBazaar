@@ -48,12 +48,7 @@ public class User implements Serializable {
 
 	@Override
 	public int hashCode() {
-		// @formatter:off
-		HashCodeBuilder hcb = new HashCodeBuilder()
-			.append(id)
-			.append(userName)
-			.append(displayName);
-		// @formatter:on
+		HashCodeBuilder hcb = new HashCodeBuilder().append(id);
 		return hcb.toHashCode();
 	}
 
@@ -66,12 +61,6 @@ public class User implements Serializable {
 			return true;
 		}
 		final User otherItem = (User) obj;
-		// @formatter:off
-		return new EqualsBuilder()
-			.append(id, otherItem.id)
-			.append(userName, otherItem.userName)
-			.append(displayName, otherItem.displayName)
-			.isEquals();
-		// @formatter:on
+		return new EqualsBuilder().append(id, otherItem.id).isEquals();
 	}
 }

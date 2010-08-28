@@ -39,10 +39,6 @@ public class Tag implements Serializable {
 			return true;
 		}
 		final Tag otherItem = (Tag) obj;
-		// @formatter:off
-		return new EqualsBuilder()
-			.append(tag, otherItem.tag)
-			.isEquals();
-		// @formatter:on
+		return new EqualsBuilder().append(tag, otherItem.tag).isEquals();
 	}
 }

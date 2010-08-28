@@ -117,18 +117,7 @@ public class Item implements Serializable {
 
 	@Override
 	public int hashCode() {
-		// @formatter:off
-		HashCodeBuilder hcb = new HashCodeBuilder()
-			.append(id)
-			.append(title)
-			.append(creationDate)
-			.append(description)
-			.append(author)
-			.append(images)
-			.append(tags)
-			.append(price)
-			.append(state);
-		// @formatter:on
+		HashCodeBuilder hcb = new HashCodeBuilder().append(id);
 		return hcb.toHashCode();
 	}
 
@@ -141,18 +130,6 @@ public class Item implements Serializable {
 			return true;
 		}
 		final Item otherItem = (Item) obj;
-		// @formatter:off
-		return new EqualsBuilder()
-			.append(id, otherItem.id)
-			.append(title, otherItem.title)
-			.append(creationDate, otherItem.creationDate)
-			.append(description, otherItem.description)
-			.append(author, otherItem.author)
-			.append(images, otherItem.images)
-			.append(tags, otherItem.tags)
-			.append(price, otherItem.price)
-			.append(state, otherItem.state)
-			.isEquals();
-		// @formatter:on
+		return new EqualsBuilder().append(id, otherItem.id).isEquals();
 	}
 }
