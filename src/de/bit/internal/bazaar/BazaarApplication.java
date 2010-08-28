@@ -1,5 +1,7 @@
 package de.bit.internal.bazaar;
 
+import java.util.Date;
+
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
@@ -48,7 +50,7 @@ public class BazaarApplication extends Application implements
 		main = new Window("bIT Bazaar");
 		setMainWindow(main);
 
-		userService = UserServiceFactory.getUserService();
+		userService = getUserService();
 		setLogoutURL(userService.createLogoutURL("/login"));
 
 		User user = userService.getCurrentUser();
@@ -57,6 +59,12 @@ public class BazaarApplication extends Application implements
 		} else {
 			authenticatedInit();
 		}
+	}
+
+	private UserService getUserService() {
+		if (userService == null)
+			userService = UserServiceFactory.getUserService();
+		return userService;
 	}
 
 	private void unauthenticated() {
@@ -123,6 +131,8 @@ public class BazaarApplication extends Application implements
 				ItemForm newItemForm = new ItemForm();
 				newItemForm.setContainer(itemTable);
 				de.bit.internal.bazaar.model.Item newItem = new de.bit.internal.bazaar.model.Item();
+				newItem.setCreationDate(new Date(System.currentTimeMillis()));
+				newItem.setAuthor(getUserService().getCurrentUser());
 
 				newItemForm
 						.setItemDataSource(new BeanItem<de.bit.internal.bazaar.model.Item>(

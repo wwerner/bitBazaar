@@ -5,9 +5,6 @@ import com.vaadin.ui.Component;
 import com.vaadin.ui.DefaultFieldFactory;
 import com.vaadin.ui.Field;
 import com.vaadin.ui.RichTextArea;
-import com.vaadin.ui.TextField;
-
-import de.bit.internal.bazaar.model.User;
 
 @SuppressWarnings("serial")
 public class ItemFormFieldFactory extends DefaultFieldFactory {

@@ -1,7 +1,7 @@
 package de.bit.internal.bazaar.model;
 
 import java.io.Serializable;
-import java.sql.Date;
+import java.util.Date;
 import java.util.List;
 
 import javax.persistence.CascadeType;
@@ -10,10 +10,11 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
-import javax.persistence.OneToOne;
 
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
+
+import com.google.appengine.api.users.User;
 
 @SuppressWarnings("serial")
 @Entity
@@ -26,7 +27,6 @@ public class Item implements Serializable {
 	private String title;
 	private String description;
 
-	@OneToOne(cascade = CascadeType.ALL)
 	private User author;
 
 	@OneToMany(cascade = CascadeType.ALL)
@@ -111,7 +111,7 @@ public class Item implements Serializable {
 
 	public String getAuthorDisplayName() {
 		if (author != null)
-			return author.getDisplayName();
+			return author.getEmail();
 		return null;
 	}
 
