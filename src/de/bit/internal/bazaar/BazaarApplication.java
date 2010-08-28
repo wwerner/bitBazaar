@@ -1,11 +1,10 @@
 package de.bit.internal.bazaar;
 
-import java.util.Date;
-
 import com.google.appengine.api.users.User;
 import com.google.appengine.api.users.UserService;
 import com.google.appengine.api.users.UserServiceFactory;
 import com.vaadin.Application;
+import com.vaadin.data.Container.Filterable;
 import com.vaadin.data.Item;
 import com.vaadin.data.Property;
 import com.vaadin.data.Property.ValueChangeEvent;
@@ -21,6 +20,7 @@ import com.vaadin.ui.VerticalLayout;
 import com.vaadin.ui.Window;
 
 import de.bit.internal.bazaar.data.JPAItemContainer;
+import de.bit.internal.bazaar.model.ItemState;
 import de.bit.internal.bazaar.ui.ItemForm;
 import de.bit.internal.bazaar.ui.ItemTable;
 
@@ -69,7 +69,7 @@ public class BazaarApplication extends Application implements
 
 	private void unauthenticated() {
 		Window goToAuthWindow = new Window();
-		Panel p = new Panel("Zugriff verweigert");
+		Panel p = new Panel("Ne ne ne");
 		Button b = new Button("Bitte anmelden, erstmal.");
 		b.addListener(new ClickListener() {
 			@Override
@@ -96,7 +96,10 @@ public class BazaarApplication extends Application implements
 		layout.setSizeFull();
 
 		getItemTable().setValueChangeListener(this);
-		getItemTable().setDataSource(new JPAItemContainer());
+
+		JPAItemContainer dataSource= JPAItemContainer.allItems();
+		dataSource.addContainerFilter("state", ItemState.ACTIVE.toString(), false, false);
+		getItemTable().setDataSource(dataSource);
 		getItemTable().init();
 
 		SplitPanel content = new SplitPanel();
@@ -120,8 +123,30 @@ public class BazaarApplication extends Application implements
 		lo.addComponent(newest);
 		lo.addComponent(newItem);
 
+		Button myItems = new Button("Meine Einträge");
+		myItems.addListener(new ClickListener() {
+			@Override
+			public void buttonClick(ClickEvent event) {
+				Filterable dataSource= (Filterable)getItemTable().getDataSource();
+				dataSource.removeAllContainerFilters();
+				dataSource.addContainerFilter("author", getUserService().getCurrentUser().getEmail(), false, false);
+			}
+		});
+		lo.addComponent(myItems);
+		
+		Button allActiveItems = new Button("Alle aktiven Einträge");
+		allActiveItems.addListener(new ClickListener() {
+			@Override
+			public void buttonClick(ClickEvent event) {
+				Filterable dataSource= (Filterable)getItemTable().getDataSource();
+				dataSource.removeAllContainerFilters();
+				dataSource.addContainerFilter("state", ItemState.ACTIVE.toString(), false, false);
+			}
+		});
+		lo.addComponent(allActiveItems);
+
 		Button logOut = new Button();
-		logOut.setCaption(userService.getCurrentUser().getEmail() + " abmelden");
+		logOut.setCaption(getUserService().getCurrentUser().getEmail() + " abmelden");
 		lo.addComponent(logOut);
 
 		newItem.addListener(new ClickListener() {
@@ -130,9 +155,8 @@ public class BazaarApplication extends Application implements
 			public void buttonClick(ClickEvent event) {
 				ItemForm newItemForm = new ItemForm();
 				newItemForm.setContainer(itemTable);
-				de.bit.internal.bazaar.model.Item newItem = new de.bit.internal.bazaar.model.Item();
-				newItem.setCreationDate(new Date(System.currentTimeMillis()));
-				newItem.setAuthor(getUserService().getCurrentUser());
+				de.bit.internal.bazaar.model.Item newItem = ItemUtils
+						.newItemTemplate();
 
 				newItemForm
 						.setItemDataSource(new BeanItem<de.bit.internal.bazaar.model.Item>(

@@ -49,6 +49,13 @@ public class ItemForm extends Form {
 				}
 			}
 		});
+
+		cancel.addListener(new ClickListener() {
+			@Override
+			public void buttonClick(ClickEvent event) {
+				getApplication().getMainWindow().removeWindow(getWindow());
+			}
+		});
 	}
 
 	public Container getContainer() {

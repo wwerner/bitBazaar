@@ -6,11 +6,13 @@ import java.util.List;
 
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.commons.lang.builder.EqualsBuilder;
 import org.apache.commons.lang.builder.HashCodeBuilder;
 
@@ -35,6 +37,8 @@ public class Item implements Serializable {
 	@OneToMany(cascade = CascadeType.ALL)
 	private List<Tag> tags;
 	private Double price;
+
+	@Enumerated
 	private ItemState state;
 
 	public String getTitle() {
@@ -85,14 +89,26 @@ public class Item implements Serializable {
 		this.price = price;
 	}
 
-	public ItemState getState() {
-		return state;
+/*	public String getState() {
+		if (state == null)
+			return StringUtils.EMPTY;
+		return state.getLabel();
 	}
 
-	public void setState(ItemState state) {
-		this.state = state;
+	public void setState(String state) {
+		if (ItemState.ACTIVE.getLabel().equals(state)) {
+			this.state = ItemState.ACTIVE;
+		} else if (ItemState.DRAFT.getLabel().equals(state)) {
+			this.state = ItemState.DRAFT;
+		} else if (ItemState.SOLD.getLabel().equals(state)) {
+			this.state = ItemState.SOLD;
+		} else
+			throw new IllegalArgumentException(
+					"Only the following values are valid: "
+							+ ItemState.valuesList());
 	}
-
+*/
+	
 	public Date getCreationDate() {
 		return creationDate;
 	}
@@ -131,5 +147,13 @@ public class Item implements Serializable {
 		}
 		final Item otherItem = (Item) obj;
 		return new EqualsBuilder().append(id, otherItem.id).isEquals();
+	}
+
+	public ItemState getState() {
+		return state;
+	}
+
+	public void setState(ItemState state) {
+		this.state = state;
 	}
 }
